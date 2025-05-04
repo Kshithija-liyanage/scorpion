@@ -1,0 +1,53 @@
+---
+# PR Extraction Data in YAML Format
+pr_id: "PR-9123"
+file_changes:
+  - filename: "NotificationService.java"
+    operation: "add"
+    path: "/src/main/java/com/scorpion/notifications/"
+    class_changes:
+      - class_name: "EmailNotificationService"
+        operation: "add"
+        function_changes:
+          - function_name: "sendEmail(String recipient, String subject, String body)"
+            operation: "add"
+          - function_name: "sendTemplatedEmail(String recipient, String templateId, Map<String, Object> data)"
+            operation: "add"
+          - function_name: "trackEmailDelivery(String messageId)"
+            operation: "add"
+      - class_name: "NotificationTemplateManager"
+        operation: "add"
+        function_changes:
+          - function_name: "getTemplate(String templateId)"
+            operation: "add"
+          - function_name: "renderTemplate(String templateId, Map<String, Object> data)"
+            operation: "add"
+  
+  - filename: "NotificationController.java"
+    operation: "add"
+    path: "/src/main/java/com/scorpion/controllers/"
+    class_changes:
+      - class_name: "NotificationPreferencesController"
+        operation: "add"
+        function_changes:
+          - function_name: "updatePreferences()"
+            operation: "add"
+          - function_name: "getPreferences()"
+            operation: "add"
+      - class_name: "NotificationHistoryController"
+        operation: "add"
+        function_changes:
+          - function_name: "getNotificationHistory()"
+            operation: "add"
+
+  - filename: "notification-service.js"
+    operation: "add"
+    path: "/src/frontend/services/"
+    class_changes:
+      - class_name: "NotificationService"
+        operation: "add"
+        function_changes:
+          - function_name: "getNotifications()"
+            operation: "add"
+          - function_name: "markAsRead(notificationId)"
+            operation: "add"

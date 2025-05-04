@@ -1,0 +1,53 @@
+---
+# PR Extraction Data in YAML Format
+pr_id: "PR-8901"
+file_changes:
+  - filename: "ProductCatalogService.java"
+    operation: "add"
+    path: "/src/main/java/com/scorpion/catalog/"
+    class_changes:
+      - class_name: "ProductRepository"
+        operation: "add"
+        function_changes:
+          - function_name: "findProductById(String productId)"
+            operation: "add"
+          - function_name: "searchProducts(Map<String, Object> filters)"
+            operation: "add"
+          - function_name: "updateProductInventory(String productId, int quantity)"
+            operation: "add"
+      - class_name: "CategoryManager"
+        operation: "add"
+        function_changes:
+          - function_name: "getCategoryTree()"
+            operation: "add"
+          - function_name: "assignProductToCategory(String productId, String categoryId)"
+            operation: "add"
+  
+  - filename: "CatalogController.java"
+    operation: "add"
+    path: "/src/main/java/com/scorpion/controllers/"
+    class_changes:
+      - class_name: "ProductController"
+        operation: "add"
+        function_changes:
+          - function_name: "getProductDetails(String productId)"
+            operation: "add"
+          - function_name: "searchCatalog(SearchRequest request)"
+            operation: "add"
+      - class_name: "CategoryController"
+        operation: "add"
+        function_changes:
+          - function_name: "getCategoryProducts(String categoryId)"
+            operation: "add"
+
+  - filename: "catalog-service.js"
+    operation: "add"
+    path: "/src/frontend/services/"
+    class_changes:
+      - class_name: "CatalogService"
+        operation: "add"
+        function_changes:
+          - function_name: "fetchProducts(filters)"
+            operation: "add"
+          - function_name: "getProductDetails(productId)"
+            operation: "add"

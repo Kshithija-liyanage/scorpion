@@ -1,0 +1,53 @@
+---
+# PR Extraction Data in YAML Format
+pr_id: "PR-7823"
+file_changes:
+  - filename: "UserAuthenticationService.java"
+    operation: "add"
+    path: "/src/main/java/com/scorpion/auth/"
+    class_changes:
+      - class_name: "OAuthAuthenticationService"
+        operation: "add"
+        function_changes:
+          - function_name: "initiateOAuthFlow(String provider)"
+            operation: "add"
+          - function_name: "handleOAuthCallback(String code, String state)"
+            operation: "add"
+          - function_name: "refreshAccessToken(String refreshToken)"
+            operation: "add"
+      - class_name: "TokenManager"
+        operation: "modify"
+        function_changes:
+          - function_name: "validateToken(String token)"
+            operation: "modify"
+          - function_name: "storeTokens(String accessToken, String refreshToken, String userId)"
+            operation: "add"
+  
+  - filename: "UserController.java"
+    operation: "modify"
+    path: "/src/main/java/com/scorpion/controllers/"
+    class_changes:
+      - class_name: "AuthenticationController"
+        operation: "modify"
+        function_changes:
+          - function_name: "login()"
+            operation: "modify"
+          - function_name: "handleOAuthRedirect()"
+            operation: "add"
+      - class_name: "UserProfileController"
+        operation: "add"
+        function_changes:
+          - function_name: "getConnectedAccounts()"
+            operation: "add"
+
+  - filename: "auth-service.js"
+    operation: "add"
+    path: "/src/frontend/services/"
+    class_changes:
+      - class_name: "AuthService"
+        operation: "add"
+        function_changes:
+          - function_name: "initiateLogin(provider)"
+            operation: "add"
+          - function_name: "handleAuthResponse()"
+            operation: "add"

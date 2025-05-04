@@ -1,0 +1,53 @@
+---
+# PR Extraction Data in YAML Format
+pr_id: "PR-8456"
+file_changes:
+  - filename: "PaymentProcessor.java"
+    operation: "add"
+    path: "/src/main/java/com/scorpion/payment/"
+    class_changes:
+      - class_name: "StripePaymentProcessor"
+        operation: "add"
+        function_changes:
+          - function_name: "processPayment(PaymentRequest request)"
+            operation: "add"
+          - function_name: "refundPayment(String paymentId)"
+            operation: "add"
+          - function_name: "getPaymentStatus(String paymentId)"
+            operation: "add"
+      - class_name: "PaymentValidator"
+        operation: "add"
+        function_changes:
+          - function_name: "validateCardDetails(CardInfo cardInfo)"
+            operation: "add"
+          - function_name: "validateAmount(BigDecimal amount)"
+            operation: "add"
+  
+  - filename: "PaymentController.java"
+    operation: "add"
+    path: "/src/main/java/com/scorpion/controllers/"
+    class_changes:
+      - class_name: "PaymentController"
+        operation: "add"
+        function_changes:
+          - function_name: "initiatePayment()"
+            operation: "add"
+          - function_name: "handlePaymentCallback()"
+            operation: "add"
+      - class_name: "PaymentHistoryController"
+        operation: "add"
+        function_changes:
+          - function_name: "getPaymentHistory()"
+            operation: "add"
+
+  - filename: "payment-service.js"
+    operation: "add"
+    path: "/src/frontend/services/"
+    class_changes:
+      - class_name: "PaymentService"
+        operation: "add"
+        function_changes:
+          - function_name: "initiatePayment(paymentDetails)"
+            operation: "add"
+          - function_name: "handlePaymentResponse()"
+            operation: "add"

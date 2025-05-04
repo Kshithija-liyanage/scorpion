@@ -1,0 +1,55 @@
+---
+# PR Extraction Data in YAML Format
+pr_id: "PR-8765"
+file_changes:
+  - filename: "UserAuthenticationService.java"
+    operation: "modify"
+    path: "/src/main/java/com/scorpion/auth/"
+    class_changes:
+      - class_name: "OAuthAuthenticationService"
+        operation: "modify"
+        function_changes:
+          - function_name: "initiateOAuthFlow(String provider)"
+            operation: "modify"
+          - function_name: "handleOAuthCallback(String code, String state)"
+            operation: "modify"
+          - function_name: "validateUserSession(String sessionToken)"
+            operation: "add"
+      - class_name: "TokenManager"
+        operation: "modify"
+        function_changes:
+          - function_name: "validateToken(String token)"
+            operation: "modify"
+          - function_name: "generateNewToken(String userId, Map<String, Object> claims)"
+            operation: "add"
+  
+  - filename: "UserController.java"
+    operation: "modify"
+    path: "/src/main/java/com/scorpion/controllers/"
+    class_changes:
+      - class_name: "AuthenticationController"
+        operation: "modify"
+        function_changes:
+          - function_name: "login()"
+            operation: "modify"
+          - function_name: "logout()"
+            operation: "add"
+      - class_name: "PasswordResetController"
+        operation: "add"
+        function_changes:
+          - function_name: "requestPasswordReset(String email)"
+            operation: "add"
+          - function_name: "validateResetToken(String token)"
+            operation: "add"
+
+  - filename: "user-service.js"
+    operation: "add"
+    path: "/src/frontend/services/"
+    class_changes:
+      - class_name: "UserService"
+        operation: "add"
+        function_changes:
+          - function_name: "getCurrentUser()"
+            operation: "add"
+          - function_name: "updateUserProfile(userData)"
+            operation: "add"

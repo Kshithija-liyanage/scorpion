@@ -1,0 +1,53 @@
+---
+# PR Extraction Data in YAML Format
+pr_id: "PR-7512"
+file_changes:
+  - filename: "DataAnalyticsService.java"
+    operation: "add"
+    path: "/src/main/java/com/scorpion/analytics/"
+    class_changes:
+      - class_name: "UserActivityAnalyzer"
+        operation: "add"
+        function_changes:
+          - function_name: "trackUserActivity(String userId, String activityType)"
+            operation: "add"
+          - function_name: "generateUserActivityReport(String userId, Date startDate, Date endDate)"
+            operation: "add"
+          - function_name: "identifyUserPatterns(String userId)"
+            operation: "add"
+      - class_name: "AnalyticsDataProcessor"
+        operation: "add"
+        function_changes:
+          - function_name: "processRawData(List<ActivityData> data)"
+            operation: "add"
+          - function_name: "aggregateByDimension(String dimension)"
+            operation: "add"
+  
+  - filename: "AnalyticsController.java"
+    operation: "add"
+    path: "/src/main/java/com/scorpion/controllers/"
+    class_changes:
+      - class_name: "AnalyticsDashboardController"
+        operation: "add"
+        function_changes:
+          - function_name: "getDashboardData()"
+            operation: "add"
+          - function_name: "exportReport(ReportFormat format)"
+            operation: "add"
+      - class_name: "UserInsightsController"
+        operation: "add"
+        function_changes:
+          - function_name: "getUserInsights(String userId)"
+            operation: "add"
+
+  - filename: "analytics-service.js"
+    operation: "add"
+    path: "/src/frontend/services/"
+    class_changes:
+      - class_name: "AnalyticsService"
+        operation: "add"
+        function_changes:
+          - function_name: "fetchAnalyticsData(timeRange)"
+            operation: "add"
+          - function_name: "renderCharts(containerId, data)"
+            operation: "add"
