@@ -1,0 +1,116 @@
+---
+# PR Metadata
+pr_id: "PR-8901"
+story:
+  id: "STORY-5342"
+  title: "Implement Product Catalog System"
+  description: |
+    As a customer, I want to browse and search through a comprehensive product catalog
+    so that I can find and purchase products that meet my needs.
+    
+    This story involves implementing a robust product catalog system that supports
+    efficient product storage, categorization, searching, and inventory management.
+    The system should be optimized for performance even with large catalogs and
+    support rich product metadata.
+    
+    Requirements:
+    - Efficient product data storage and retrieval
+    - Hierarchical category management
+    - Advanced search capabilities with filtering
+    - Real-time inventory tracking
+    - Support for product variants and attributes
+
+bugs:
+  - id: "BUG-1423"
+    title: "Product search returning incorrect results for multi-word queries"
+    description: |
+      The product search functionality is returning incorrect or incomplete results
+      when users search with multi-word queries. For example, searching for "blue cotton shirt"
+      returns results for "blue shirt" but misses products that are specifically tagged
+      as "cotton" or have "cotton" in their description.
+    rca: |
+      The ProductRepository.searchProducts method was using an OR condition between
+      search terms instead of an AND condition, causing it to return products that
+      match any of the search terms rather than all of them. Additionally, the search
+      was only looking at product names and not considering other relevant fields like
+      description and material attributes.
+    resolution: |
+      Modified the search algorithm to use AND logic between search terms by default,
+      with an option to use OR logic if specified. Expanded the search to include
+      product descriptions, attributes, and category tags. Implemented relevance
+      scoring to prioritize results that match more terms.
+    comments:
+      - author: "UX Research Team"
+        date: "2025-05-01"
+        text: |
+          In our latest user testing sessions, we observed that 7 out of 10 users
+          were unable to find products using specific multi-word searches. This is
+          significantly impacting the shopping experience.
+          
+      - author: "Sophia Chen"
+        date: "2025-05-02"
+        text: |
+          After reviewing the search implementation, I found that we're using OR logic
+          between search terms, which explains why users are getting too many irrelevant
+          results. We should switch to AND logic as the default.
+          
+      - author: "Product Manager"
+        date: "2025-05-03"
+        text: |
+          This is a high-priority issue affecting conversion rates. Our analytics show
+          that users who use multi-word searches have a 45% lower conversion rate
+          compared to single-word searches.
+          
+      - author: "Dev Team"
+        date: "2025-05-04"
+        text: |
+          Fix implemented in commit f78b21e. We've also added a more sophisticated
+          relevance scoring system that should improve search quality overall.
+          
+  - id: "BUG-1456"
+    title: "Category tree performance degradation with deep hierarchies"
+    description: |
+      The category management system is experiencing significant performance issues
+      when dealing with deep category hierarchies (more than 5 levels deep). This
+      is causing slow page loads on category browsing pages and timeouts during
+      category tree updates.
+    rca: |
+      The CategoryManager.getCategoryTree method was using a recursive approach
+      to build the category tree, which resulted in exponential time complexity
+      for deep hierarchies. Additionally, the database queries weren't optimized
+      for hierarchical data, causing multiple round-trips to the database.
+    resolution: |
+      Refactored the category tree implementation to use a non-recursive approach
+      with a single optimized database query using Common Table Expressions (CTEs).
+      Implemented caching for the category tree with appropriate invalidation
+      strategies. Added pagination support for large category listings.
+    comments:
+      - author: "Operations Team"
+        date: "2025-05-08"
+        text: |
+          We're seeing timeouts on the category management pages, particularly
+          for departments with complex category hierarchies like Electronics
+          and Home Goods. This is affecting the merchandising team's ability
+          to update the catalog.
+          
+      - author: "James Wilson"
+        date: "2025-05-09"
+        text: |
+          The issue is in the recursive implementation of the category tree builder.
+          It's making a separate database query for each category node, which becomes
+          extremely inefficient for deep hierarchies. We need to refactor this to
+          use a more efficient approach.
+          
+      - author: "Database Team"
+        date: "2025-05-10"
+        text: |
+          We recommend using a CTE (Common Table Expression) to fetch the entire
+          category hierarchy in a single query. This is much more efficient for
+          hierarchical data structures.
+          
+      - author: "James Wilson"
+        date: "2025-05-11"
+        text: |
+          Implemented the CTE approach in commit g92e45a. Also added caching with
+          a 15-minute TTL to further improve performance. Initial tests show a 95%
+          reduction in load time for deep category hierarchies.

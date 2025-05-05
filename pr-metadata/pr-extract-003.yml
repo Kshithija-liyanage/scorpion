@@ -1,0 +1,107 @@
+---
+# PR Metadata
+pr_id: "PR-9123"
+story:
+  id: "STORY-5678"
+  title: "Implement Notification System"
+  description: |
+    As a user, I want to receive timely notifications about relevant events
+    so that I can stay informed about important updates and actions required.
+    
+    This story involves implementing a comprehensive notification system that
+    supports multiple channels including email, in-app notifications, and
+    potentially SMS. The system should be templated, trackable, and allow
+    users to manage their notification preferences.
+    
+    Requirements:
+    - Email notification service with templating
+    - Notification delivery tracking
+    - User notification preferences management
+    - Support for different notification types and priorities
+    - Batch processing for high-volume notifications
+
+bugs:
+  - id: "BUG-1345"
+    title: "Email notifications not respecting user timezone settings"
+    description: |
+      Users are receiving email notifications at inappropriate times because
+      the system is not respecting their configured timezone preferences.
+      For example, users in Australia are receiving "daily digest" emails
+      at 3 AM their local time instead of the intended morning delivery.
+    rca: |
+      The EmailNotificationService was using the server's timezone (UTC)
+      for scheduling all notifications instead of converting timestamps
+      to each user's local timezone before determining delivery time.
+      The issue was in the sendTemplatedEmail method which wasn't
+      passing the user's timezone information to the template renderer.
+    resolution: |
+      Modified the notification scheduling system to account for user timezone
+      preferences. Added timezone conversion utilities and updated the
+      template rendering process to include timezone-specific formatting
+      for dates and times.
+    comments:
+      - author: "User Support"
+        date: "2025-04-10"
+        text: |
+          We've received multiple complaints from users in APAC region about
+          receiving notifications at inappropriate hours. This is especially
+          problematic for the daily digest emails which should arrive during
+          morning hours.
+          
+      - author: "Emma Thompson"
+        date: "2025-04-11"
+        text: |
+          I've traced this to the notification scheduling system. It's using
+          server time (UTC) for all users regardless of their timezone settings.
+          Will implement a fix that respects user timezone preferences.
+          
+      - author: "QA Team"
+        date: "2025-04-12"
+        text: |
+          Verified the fix in staging. Notifications are now being delivered
+          at appropriate times according to each user's timezone settings.
+          
+  - id: "BUG-1367"
+    title: "Notification templates failing with special characters"
+    description: |
+      Email notifications containing special characters (particularly non-Latin
+      alphabets and emojis) are being rendered incorrectly or failing to send
+      entirely. This affects users with non-English names and content.
+    rca: |
+      The NotificationTemplateManager was using an outdated template engine
+      that didn't properly support UTF-8 encoding. Additionally, the email
+      sending service wasn't setting the correct content-type headers for
+      internationalized content.
+    resolution: |
+      Updated the template engine to a newer version with proper UTF-8 support.
+      Modified the email sending service to set appropriate content-type headers
+      (text/html; charset=UTF-8). Added comprehensive tests with international
+      character sets and emojis.
+    comments:
+      - author: "Internationalization Team"
+        date: "2025-04-15"
+        text: |
+          We've noticed that notifications containing Japanese, Chinese, and
+          Korean characters are being displayed as question marks or empty
+          boxes. This is affecting our expansion into Asian markets.
+          
+      - author: "Hiroshi Tanaka"
+        date: "2025-04-16"
+        text: |
+          The issue is in the template rendering system. It's using an older
+          version of the template engine that doesn't properly handle UTF-8.
+          I'll update it to the latest version which has better international
+          character support.
+          
+      - author: "Global Support"
+        date: "2025-04-17"
+        text: |
+          This is a high-priority issue for our international users. Many are
+          reporting that their names are being displayed incorrectly in emails,
+          which looks unprofessional.
+          
+      - author: "Dev Team"
+        date: "2025-04-18"
+        text: |
+          Fix implemented in commit c45d9a2. We've also added comprehensive
+          tests with various international character sets to prevent regression.

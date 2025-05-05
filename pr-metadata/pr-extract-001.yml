@@ -1,0 +1,81 @@
+---
+# PR Metadata
+pr_id: "PR-7823"
+story:
+  id: "STORY-4512"
+  title: "Implement OAuth Authentication"
+  description: |
+    As a user, I want to be able to authenticate using my existing social media accounts
+    so that I don't have to create and remember another set of credentials.
+    
+    This story involves implementing OAuth authentication flow with major providers
+    including Google, Facebook, and GitHub. The implementation should follow the
+    OAuth 2.0 protocol and securely handle user tokens.
+    
+    Requirements:
+    - Support for multiple OAuth providers
+    - Secure token storage and management
+    - Proper error handling for failed authentication attempts
+    - User profile integration with OAuth provider data
+
+bugs:
+  - id: "BUG-1024"
+    title: "Token validation fails for expired tokens"
+    description: |
+      Token validation is not properly checking expiration dates, causing
+      users to remain authenticated even after their tokens have expired.
+      This creates a security vulnerability where unauthorized access could
+      potentially occur.
+    rca: |
+      The TokenManager.validateToken() method was only checking the token
+      signature but not validating the expiration timestamp in the JWT claims.
+    resolution: |
+      Added proper expiration validation in the TokenManager.validateToken() method.
+      Now tokens are checked for both signature validity and expiration time.
+    comments:
+      - author: "Jane Smith"
+        date: "2025-04-15"
+        text: |
+          I've noticed this issue when testing the authentication flow. Users
+          remain logged in even after I manually expire their tokens in the database.
+          
+      - author: "John Doe"
+        date: "2025-04-16"
+        text: |
+          Fixed in commit a7e23f9. Added comprehensive token validation that checks
+          not only expiration but also issuer and audience claims.
+          
+  - id: "BUG-1056"
+    title: "OAuth callback handling fails with state parameter mismatch"
+    description: |
+      When users are redirected back from the OAuth provider, the state parameter
+      validation sometimes fails, causing the authentication process to abort.
+      This happens especially when users take longer than expected to complete
+      the OAuth flow on the provider's side.
+    rca: |
+      The state parameter was being stored in the session with a 5-minute expiration,
+      but some users take longer than that to complete the authentication on the
+      provider's site, especially when they need to create an account first.
+    resolution: |
+      Extended the state parameter session timeout to 15 minutes and added better
+      error messaging to guide users if the state validation fails.
+    comments:
+      - author: "Alex Johnson"
+        date: "2025-04-20"
+        text: |
+          This is affecting approximately 8% of our OAuth authentication attempts
+          according to the analytics. Most failures happen with new users who need
+          to create accounts with the provider first.
+          
+      - author: "Sarah Williams"
+        date: "2025-04-21"
+        text: |
+          I've implemented the fix with the extended timeout. Also added a recovery
+          flow that allows users to restart the authentication process with a clear
+          error message if the state validation fails.
+          
+      - author: "QA Team"
+        date: "2025-04-22"
+        text: |
+          Verified the fix in staging environment. The extended timeout successfully
+          resolves the issue for most users. The recovery flow also works as expected.

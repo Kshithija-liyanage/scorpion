@@ -1,0 +1,98 @@
+---
+# PR Metadata
+pr_id: "PR-8456"
+story:
+  id: "STORY-5231"
+  title: "Implement Payment Processing System"
+  description: |
+    As a customer, I want to be able to make secure payments within the application
+    so that I can purchase products and services without leaving the platform.
+    
+    This story involves implementing a robust payment processing system that integrates
+    with Stripe as the primary payment gateway. The system should handle credit card
+    payments, refunds, and payment status tracking.
+    
+    Requirements:
+    - Secure credit card processing through Stripe
+    - Support for various payment methods (credit cards, digital wallets)
+    - Comprehensive payment validation
+    - Refund processing capabilities
+    - Payment history tracking and reporting
+
+bugs:
+  - id: "BUG-1187"
+    title: "Payment validation fails for valid international cards"
+    description: |
+      The payment validation system is incorrectly flagging valid international
+      credit cards as invalid, particularly cards from European and Asian countries.
+      This is preventing international customers from completing their purchases.
+    rca: |
+      The card validation logic was using US-specific validation rules for all cards,
+      which doesn't account for different BIN ranges and card number formats used
+      in international cards. Additionally, the AVS (Address Verification System)
+      was configured to require exact matches, which doesn't work well with
+      international addresses.
+    resolution: |
+      Updated the card validation logic to use region-specific validation rules
+      based on the card's BIN number. Modified the AVS settings to be more flexible
+      with international addresses while maintaining security.
+    comments:
+      - author: "Michael Chen"
+        date: "2025-04-25"
+        text: |
+          We're seeing a significant drop in conversion rates for international
+          customers. Based on support tickets, many are unable to complete payment
+          due to card validation failures despite having valid cards.
+          
+      - author: "Priya Sharma"
+        date: "2025-04-26"
+        text: |
+          I've identified the issue in the PaymentValidator class. It's using
+          a US-centric validation library that doesn't properly handle international
+          card formats. Will implement a fix using a more comprehensive validation
+          approach.
+          
+      - author: "David Wilson"
+        date: "2025-04-27"
+        text: |
+          Fix implemented in commit b8d92e1. I've also added comprehensive tests
+          with sample card numbers from different regions to ensure we don't
+          encounter similar issues in the future.
+          
+  - id: "BUG-1201"
+    title: "Refund process creates duplicate refund attempts"
+    description: |
+      When a refund is initiated, the system occasionally creates duplicate
+      refund attempts in the payment gateway, causing accounting discrepancies
+      and customer confusion when they receive multiple refund notifications.
+    rca: |
+      The refund process wasn't properly handling retry scenarios. When a refund
+      request timed out or returned an ambiguous response, the system would
+      automatically retry without checking if the original request actually
+      succeeded on the payment gateway's side.
+    resolution: |
+      Implemented an idempotency key system for refunds and added a verification
+      step that checks the payment gateway for existing refunds before initiating
+      a new refund request. Also added a reconciliation process to detect and
+      resolve any duplicate refunds.
+    comments:
+      - author: "Finance Team"
+        date: "2025-04-30"
+        text: |
+          We're seeing discrepancies in our monthly reconciliation with Stripe.
+          Several customers have received double refunds, impacting our financials
+          by approximately $12,500 this month.
+          
+      - author: "Olivia Martinez"
+        date: "2025-05-01"
+        text: |
+          After investigating the logs, I found that our system is creating duplicate
+          refund requests when the initial request times out. The issue is in the
+          error handling logic of the StripePaymentProcessor class.
+          
+      - author: "Tech Lead"
+        date: "2025-05-02"
+        text: |
+          Approved the fix with the idempotency implementation. This is a critical
+          issue affecting our financial reporting. Please prioritize testing and
+          deployment.
